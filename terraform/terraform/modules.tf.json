@@ -1,0 +1,81 @@
+{
+  "module": {
+    "appcd_0d86a85f-1ec0-5b09-8f19-4bdd2c16fb2f": {
+      "assume_role_policy": "{\n\t\t\"Version\": \"2012-10-17\",\n\t\t\"Statement\":{\n\t\t\t\t\"Action\": \"sts:AssumeRole\",\n\t\t\t\t\"Effect\": \"Allow\",\n\t\t\t\t\"Principal\": {\n\t\t\t\t\t\"Service\": \"lambda.amazonaws.com\"\n\t\t\t\t}\n\t\t\t}\n\t}",
+      "description": null,
+      "force_detach_policies": true,
+      "inline_policy": [],
+      "name": "hello-kitty-anwar-role",
+      "source": "./modules/aws_iam_role",
+      "tags": null
+    },
+    "appcd_3c528139-bf51-5784-be6a-41739764a1c1": {
+      "architecture": "x86_64",
+      "authorization_type": "NONE",
+      "cors": [],
+      "create_function_url": false,
+      "description": null,
+      "environment_variables": {
+        "IMAGES_BUCKET": "anwar-hellokitty"
+      },
+      "event_source_arn": null,
+      "event_source_mapping": [],
+      "filename": null,
+      "function_name": "hello-kitty-anwar-function",
+      "handler": "main.lambda_handler",
+      "log_format": null,
+      "log_group_name": "${module.appcd_6dcc6098-38ee-5ca3-8e62-28b2cb2ab376.name}",
+      "memory_size": 128,
+      "role": "${module.appcd_0d86a85f-1ec0-5b09-8f19-4bdd2c16fb2f.arn}",
+      "runtime": "python3.8",
+      "s3_bucket": null,
+      "s3_key": null,
+      "s3_object_version": null,
+      "source": "./modules/aws_lambda",
+      "system_log_level": null,
+      "tags": {
+        "appstack": "hello-kitty",
+        "component": "hello-kitty-anwar"
+      },
+      "timeout": 3
+    },
+    "appcd_46cc67bf-5fe1-4920-91c7-9eaf1e2ebfe0": {
+      "name": "aws_s3-hello-kitty-anwar-policy",
+      "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"AllowKmsAccess\",\n      \"Action\": [\n        \"kms:Decrypt\",\n        \"kms:Encrypt\",\n        \"kms:GenerateDataKey\"\n      ],\n      \"Effect\": \"Allow\",\n      \"Resource\": [\n        \"${module.appcd_50a4ecb8-6b13-5a66-926d-deceb6e930a2.kms_arn}\"\n      ]\n    },\n    {\n      \"Sid\": \"hellokittyanwarIMAGESBUCKETS3Bucket50a4ecb86b135a66926ddeceb6e930a2\",\n      \"Action\": [\n        \"s3:PutObject\",\n        \"s3:ListBucket\",\n        \"s3:GetObject\",\n        \"s3:GetObjectVersion\"\n      ],\n      \"Effect\": \"Allow\",\n      \"Resource\": [\n        \"${module.appcd_50a4ecb8-6b13-5a66-926d-deceb6e930a2.arn}\",\n        \"${module.appcd_50a4ecb8-6b13-5a66-926d-deceb6e930a2.arn}/*\"\n      ]\n    }\n  ]\n}",
+      "role": "${module.appcd_0d86a85f-1ec0-5b09-8f19-4bdd2c16fb2f.name}",
+      "role_type": "Custom",
+      "source": "./modules/aws_iam_role_policy"
+    },
+    "appcd_50a4ecb8-6b13-5a66-926d-deceb6e930a2": {
+      "block_public_access": true,
+      "bucket_name": "anwar-hellokitty",
+      "bucket_policy": "",
+      "enable_versioning": true,
+      "enable_website_configuration": false,
+      "source": "./modules/aws_s3",
+      "sse_algorithm": "aws:kms",
+      "tags": {
+        "appstack": "hello-kitty",
+        "component": "hello-kitty-anwar"
+      },
+      "website_error_document": "404.html",
+      "website_index_document": "index.html"
+    },
+    "appcd_6dcc6098-38ee-5ca3-8e62-28b2cb2ab376": {
+      "name": "/aws/lambda/hello-kitty-anwar-function",
+      "retention_in_days": 7,
+      "source": "./modules/aws_cloudwatch_log_group",
+      "tags": {
+        "appstack": "hello-kitty",
+        "component": "hello-kitty-anwar"
+      }
+    },
+    "appcd_9b81ab8e-7ed7-4569-80c3-c312cf0c9b7f": {
+      "name": "Writer",
+      "policy": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"CloudWatchLogGroup6dcc609838ee5ca38e6228b2cb2ab3760\",\n      \"Action\": [\n        \"logs:CreateLogGroup\"\n      ],\n      \"Effect\": \"Allow\",\n      \"Resource\": [\n        \"${module.appcd_6dcc6098-38ee-5ca3-8e62-28b2cb2ab376.arn}\"\n      ]\n    },\n    {\n      \"Sid\": \"CloudWatchLogGroup6dcc609838ee5ca38e6228b2cb2ab3761\",\n      \"Action\": [\n        \"logs:CreateLogStream\",\n        \"logs:PutLogEvents\"\n      ],\n      \"Effect\": \"Allow\",\n      \"Resource\": [\n        \"${module.appcd_6dcc6098-38ee-5ca3-8e62-28b2cb2ab376.arn}:*\"\n      ]\n    }\n  ]\n}",
+      "role": "${module.appcd_0d86a85f-1ec0-5b09-8f19-4bdd2c16fb2f.name}",
+      "role_type": "Writer",
+      "source": "./modules/aws_iam_role_policy"
+    }
+  }
+}
